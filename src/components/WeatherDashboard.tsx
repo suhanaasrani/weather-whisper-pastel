@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,13 +10,24 @@ import { HazardAlerts } from './HazardAlerts';
 import { FunFacts } from './FunFacts';
 import { DarkModeToggle } from './DarkModeToggle';
 import { WeatherAlertBanner } from './WeatherAlertBanner';
-import { getWeatherEmoji, formatTime, formatDate, getWeatherGradient } from '../utils/weatherUtils';
+import { getWeatherEmoji, formatTime, formatDate, getWeatherGradient, getAirQualityInfo } from '../utils/weatherUtils';
 import { toast } from '@/hooks/use-toast';
+
+const DEFAULT_CITY = 'London';
+const LAST_CITY_KEY = 'weather_last_city';
 
 export const WeatherDashboard = () => {
   const { weatherData, historicalData, loading, error, fetchWeatherData } = useWeatherData();
   const [city, setCity] = useState('');
   const [searchCity, setSearchCity] = useState('');
+
+  // Load last city from localStorage or use default on mount
+  useEffect(() => {
+    const lastCity = localStorage.getItem(LAST_CITY_KEY) || DEFAULT_CITY;
+    setCity(lastCity);
+    setSearchCity(lastCity);
+    fetchWeatherData(lastCity);
+  }, []);
 
   const handleSearch = async () => {
     if (!searchCity.trim()) {
@@ -28,8 +39,10 @@ export const WeatherDashboard = () => {
       return;
     }
     
-    setCity(searchCity);
-    await fetchWeatherData(searchCity.trim());
+    const trimmedCity = searchCity.trim();
+    setCity(trimmedCity);
+    localStorage.setItem(LAST_CITY_KEY, trimmedCity);
+    await fetchWeatherData(trimmedCity);
     
     if (error) {
       toast({
@@ -160,21 +173,22 @@ export const WeatherDashboard = () => {
 
                   {/* Weather details */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-muted/30 rounded-lg p-4">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <span>💧</span>
-                        <span className="text-sm text-muted-foreground">Humidity</span>
-                      </div>
-                      <div className="text-2xl font-bold">{weatherData.current.humidity}%</div>
-                    </div>
-
-                    <div className="bg-muted/30 rounded-lg p-4">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <span>💨</span>
-                        <span className="text-sm text-muted-foreground">Wind</span>
-                      </div>
-                      <div className="text-2xl font-bold">{weatherData.current.wind_speed.toFixed(1)} m/s</div>
-                    </div>
+                    {(() => {
+                      const airQuality = getAirQualityInfo(weatherData.current.humidity, weatherData.current.wind_speed);
+                      return (
+                        <div className="bg-muted/30 rounded-lg p-4 col-span-2">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span>🌬️</span>
+                            <span className="text-sm text-muted-foreground">Air Quality</span>
+                            <Badge variant={airQuality.level === 'Good' ? 'secondary' : airQuality.level === 'Moderate' ? 'outline' : 'destructive'} className="ml-auto">
+                              {airQuality.level}
+                            </Badge>
+                          </div>
+                          <div className="text-lg font-bold text-primary">{airQuality.index} AQI</div>
+                          <div className="text-sm text-muted-foreground mt-1">{airQuality.description}</div>
+                        </div>
+                      );
+                    })()}
 
                     <div className="bg-muted/30 rounded-lg p-4">
                       <div className="flex items-center space-x-2 mb-2">

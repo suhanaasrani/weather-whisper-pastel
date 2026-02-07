@@ -72,6 +72,38 @@ export const getWeatherGradient = (weatherMain: string): string => {
   }
 };
 
+export const getAirQualityInfo = (humidity: number, windSpeed: number): { index: number; level: string; description: string } => {
+  // Simulate AQI based on humidity and wind (in real app, use actual air quality API)
+  const baseAqi = Math.round(50 + (humidity * 0.3) - (windSpeed * 5));
+  const aqi = Math.max(10, Math.min(200, baseAqi));
+  
+  if (aqi <= 50) {
+    return {
+      index: aqi,
+      level: 'Good',
+      description: 'Air quality is satisfactory. Fresh air ideal for outdoor activities and open windows.'
+    };
+  } else if (aqi <= 100) {
+    return {
+      index: aqi,
+      level: 'Moderate',
+      description: 'Air quality is acceptable. Sensitive individuals may experience mild discomfort outdoors.'
+    };
+  } else if (aqi <= 150) {
+    return {
+      index: aqi,
+      level: 'Unhealthy',
+      description: 'Sensitive groups may experience health effects. Consider reducing prolonged outdoor exertion.'
+    };
+  } else {
+    return {
+      index: aqi,
+      level: 'Very Unhealthy',
+      description: 'Health warnings of emergency conditions. Everyone may experience health effects outdoors.'
+    };
+  }
+};
+
 // API key placeholders - user will replace these
 export const API_KEYS = {
   OPENWEATHER: 'YOUR_OPENWEATHER_API_KEY',
