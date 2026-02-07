@@ -3,19 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useWeatherData } from '../hooks/useWeatherData';
-import { useAuth } from '../hooks/useAuth';
 import { WeatherChart } from './WeatherChart';
 import { HazardAlerts } from './HazardAlerts';
 import { FunFacts } from './FunFacts';
 import { DarkModeToggle } from './DarkModeToggle';
+import { WeatherAlertBanner } from './WeatherAlertBanner';
 import { getWeatherEmoji, formatTime, formatDate, getWeatherGradient } from '../utils/weatherUtils';
 import { toast } from '@/hooks/use-toast';
 
 export const WeatherDashboard = () => {
-  const { user, signOut } = useAuth();
   const { weatherData, historicalData, loading, error, fetchWeatherData } = useWeatherData();
   const [city, setCity] = useState('');
   const [searchCity, setSearchCity] = useState('');
@@ -56,31 +54,13 @@ export const WeatherDashboard = () => {
         {/* Header */}
         <Card className="glass-card">
           <CardHeader>
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center space-x-4">
-                <div className="text-3xl">🌤️</div>
-                <div>
-                  <CardTitle className="text-xl">Weather Whisper</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Welcome back, {user?.name}! 👋
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <img 
-                  src={user?.picture} 
-                  alt="Profile" 
-                  className="w-8 h-8 rounded-full"
-                />
-                <Button 
-                  onClick={signOut}
-                  variant="outline"
-                  size="sm"
-                  className="glass-card border-0"
-                >
-                  Sign Out
-                </Button>
+            <div className="flex items-center space-x-4">
+              <div className="text-3xl">🌤️</div>
+              <div>
+                <CardTitle className="text-xl">Weather Whisper</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Your beautiful weather companion ✨
+                </p>
               </div>
             </div>
           </CardHeader>
@@ -216,6 +196,13 @@ export const WeatherDashboard = () => {
               </CardContent>
             </Card>
 
+            {/* Smart Weather Alerts */}
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <WeatherAlertBanner weatherData={weatherData} />
+              </CardContent>
+            </Card>
+
             {/* Hourly & Daily Forecast */}
             <Card className="glass-card">
               <CardHeader>
@@ -239,7 +226,7 @@ export const WeatherDashboard = () => {
                         {getWeatherEmoji(hour.weather[0].main, hour.weather[0].icon)}
                       </div>
                       <div className="font-bold">{Math.round(hour.temp)}°</div>
-                      <div className="text-xs text-blue-500 mt-1">
+                      <div className="text-xs text-primary mt-1">
                         {Math.round(hour.pop * 100)}%
                       </div>
                     </div>
@@ -278,7 +265,7 @@ export const WeatherDashboard = () => {
                         <div className="font-bold">
                           {Math.round(day.temp.max)}° / {Math.round(day.temp.min)}°
                         </div>
-                        <div className="text-sm text-blue-500">
+                        <div className="text-sm text-primary">
                           {Math.round(day.pop * 100)}% rain
                         </div>
                       </div>
@@ -309,17 +296,6 @@ export const WeatherDashboard = () => {
               </TabsContent>
             </Tabs>
 
-            {/* Footer */}
-            <Card className="glass-card text-center">
-              <CardContent className="p-4">
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <p>🌤️ Weather data provided by OpenWeatherMap</p>
-                  <p>💙 Built with love for beautiful weather experiences</p>
-                  <Separator className="my-2" />
-                  <p>Last updated: {new Date().toLocaleString()}</p>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
 

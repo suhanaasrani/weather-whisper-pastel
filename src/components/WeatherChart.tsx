@@ -39,26 +39,30 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
       {
         label: 'Temperature (°C)',
         data: hourlyData.map(hour => Math.round(hour.temp * 10) / 10),
-        borderColor: 'hsl(var(--primary))',
-        backgroundColor: 'hsla(var(--primary), 0.1)',
+        borderColor: '#60a5fa',
+        backgroundColor: 'rgba(96, 165, 250, 0.15)',
         fill: true,
         tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        pointBackgroundColor: 'hsl(var(--primary))',
-        pointBorderColor: 'hsl(var(--primary-foreground))',
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#60a5fa',
+        pointBorderColor: '#ffffff',
         pointBorderWidth: 2,
+        borderWidth: 3,
       },
       {
         label: 'Rain Probability (%)',
         data: hourlyData.map(hour => Math.round(hour.pop * 100 * 10) / 10),
-        borderColor: 'hsl(var(--weather-rainy))',
-        backgroundColor: 'hsla(var(--weather-rainy), 0.1)',
+        borderColor: '#818cf8',
+        backgroundColor: 'rgba(129, 140, 248, 0.1)',
         fill: false,
         tension: 0.4,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        pointBackgroundColor: 'hsl(var(--weather-rainy))',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#818cf8',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        borderWidth: 2,
         yAxisID: 'y1',
       }
     ]
@@ -73,22 +77,30 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
       {
         label: 'Max Temp (°C)',
         data: dailyData.map(day => Math.round(day.temp.max * 10) / 10),
-        borderColor: 'hsl(var(--weather-sunny))',
-        backgroundColor: 'hsla(var(--weather-sunny), 0.2)',
+        borderColor: '#fbbf24',
+        backgroundColor: 'rgba(251, 191, 36, 0.2)',
         fill: '+1',
         tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#fbbf24',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        borderWidth: 3,
       },
       {
         label: 'Min Temp (°C)',
         data: dailyData.map(day => Math.round(day.temp.min * 10) / 10),
-        borderColor: 'hsl(var(--primary))',
-        backgroundColor: 'hsla(var(--primary), 0.2)',
+        borderColor: '#60a5fa',
+        backgroundColor: 'rgba(96, 165, 250, 0.15)',
         fill: 'origin',
         tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#60a5fa',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        borderWidth: 3,
       }
     ]
   };
@@ -102,6 +114,7 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
         labels: {
           usePointStyle: true,
           padding: 20,
+          color: '#6b7280',
           font: {
             size: 12,
             family: 'system-ui, -apple-system, sans-serif'
@@ -109,23 +122,24 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
         }
       },
       tooltip: {
-        backgroundColor: 'hsl(var(--popover))',
-        titleColor: 'hsl(var(--popover-foreground))',
-        bodyColor: 'hsl(var(--popover-foreground))',
-        borderColor: 'hsl(var(--border))',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        titleColor: '#374151',
+        bodyColor: '#374151',
+        borderColor: 'rgba(200, 200, 200, 0.5)',
         borderWidth: 1,
-        cornerRadius: 8,
+        cornerRadius: 12,
         displayColors: true,
+        padding: 12,
       }
     },
     scales: {
       x: {
         grid: {
-          color: 'hsl(var(--border))',
+          color: 'rgba(200, 200, 200, 0.2)',
           drawBorder: false,
         },
         ticks: {
-          color: 'hsl(var(--muted-foreground))',
+          color: '#9ca3af',
           font: {
             size: 11
           }
@@ -134,11 +148,11 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
       y: {
         position: 'left' as const,
         grid: {
-          color: 'hsl(var(--border))',
+          color: 'rgba(200, 200, 200, 0.2)',
           drawBorder: false,
         },
         ticks: {
-          color: 'hsl(var(--muted-foreground))',
+          color: '#9ca3af',
           font: {
             size: 11
           },
@@ -153,7 +167,7 @@ export const WeatherChart = ({ weatherData }: WeatherChartProps) => {
           drawOnChartArea: false,
         },
         ticks: {
-          color: 'hsl(var(--muted-foreground))',
+          color: '#9ca3af',
           font: {
             size: 11
           },
